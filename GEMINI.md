@@ -7,8 +7,8 @@ This project is used to configure and maintain my homelab. It's based on a proje
 ## Network
 
 My local network is in the range 192.168.86.0 and is managed by Google nest router
-I got two pihole instances in 192.168.86.79 and 192.168.86.103 to server as dns
-Access from outside is secured by nginx proxy manager using subdomains of boflab.duckdns.org. It's hosted on a raspberry pi named bofpi1.lan
+I got two pihole instances in 192.168.86.79 and 192.168.86.103 to server as dns in that order
+Access from outside is secured by nginx proxy manager using subdomains of boflab.duckdns.org. It's hosted on a raspberry pi named bofpi1.lan with ip 192.168.86.103
 
 ## Proxmox
 
