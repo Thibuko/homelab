@@ -37,3 +37,7 @@ Also got one LXC container to manage the hard drive and share them in samba
 ## Management
 
 I use ansible to manage all those VM configuration. Everything related to ansible is located in ansible folder
+
+## Git
+
+Use conventionnal commit to generate commit message
