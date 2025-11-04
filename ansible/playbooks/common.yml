@@ -1,0 +1,10 @@
+---
+- hosts: vms
+  become: yes
+  roles:
+    - common
+
+- hosts: lxc
+  become: yes
+  roles:
+    - common

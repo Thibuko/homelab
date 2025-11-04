@@ -1,6 +1,5 @@
 ---
 - hosts: vms
-  become: true
   tasks:
     - name: Ping all hosts
       ansible.builtin.ping:

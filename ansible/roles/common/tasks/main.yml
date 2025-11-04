@@ -1,0 +1,32 @@
+---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install common packages
+  ansible.builtin.apt:
+    name:
+      - vim
+      - git
+      - curl
+      - wget
+    state: present
+
+- name: Upgrade all packages
+  ansible.builtin.apt:
+    upgrade: yes
+
+- name: Autoremove unnecessary packages
+  ansible.builtin.apt:
+    autoremove: yes
+
+- name: Set timezone to Europe/Brussels
+  community.general.timezone:
+    name: Europe/Brussels
+
+- name: Manage authorized keys
+  ansible.posix.authorized_key:
+    user: "{{ ansible_user }}"
+    key: "{{ lookup('file', playbook_dir + '/../roles/common/files/id_rsa.pub') }}"
+    state: present

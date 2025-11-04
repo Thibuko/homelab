@@ -3,3 +3,6 @@ servarr ansible_host=192.168.86.66
 immich ansible_host=192.168.86.84
 proxy ansible_host=192.168.86.82
 network ansible_host=192.168.86.79
+
+[lxc]
+media.lan ansible_host=192.168.86.30
