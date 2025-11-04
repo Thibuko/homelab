@@ -1,5 +1,5 @@
 [vms]
-servarr ansible_host=192.168.XX.XX
-immich ansible_host=192.168.XX.XX
-proxy ansible_host=192.168.XX.XX
-network ansible_host=192.168.XX.XX
+servarr ansible_host=192.168.86.66
+immich ansible_host=192.168.86.84
+proxy ansible_host=192.168.86.82
+network ansible_host=192.168.86.79

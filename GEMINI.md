@@ -18,7 +18,7 @@ Current existing VM:
 
 * servarr
   * contains most of the arr stack to manage media, more info in media folder
-  * 192.168.86.
+  * 192.168.86.66
 * immich
   * contains immich to manage my photos [https://immich.app/](https://immich.app/)
   * 192.168.86.84
