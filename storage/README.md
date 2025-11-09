@@ -1,15 +1,18 @@
 # Storage and Backup
+
 In this repo I will layout my storage and backup solutions for all of the services and platforms running on my homelab. Currently, I manage everything with Proxmox and Proxmox Backup Server. While solutions like Unraid and TrueNAS are awesome, I have found over the years the Proxmox is actually an amazing solution for managing storage, network shares, and backups.
 
 > [!NOTE]
 > I've recently switched to using Unraid on a seperate machine for my shares and primary file storage; however, this guide still works great for a all-Proxmox solution. I will make chages to this page in the next few weeks to reflect additional storage options and the best ways to mount nfs shares in Proxmox.
 
 ## Video Guides
+
 This readme is a companion to my official walkthrough guide!
 
 [![](https://raw.githubusercontent.com/TechHutTV/homelab/refs/heads/main/storage/part1_thumbnail.webp)](https://youtu.be/qmSizZUbCOA)
 
 ## Navigation
+
 * [Apps](https://github.com/TechHutTV/homelab/tree/main/apps) - List of all the apps and services.
 * [Home Assistant](https://github.com/TechHutTV/homelab/tree/main/homeassistant) - Smart home services and automation.
 * [Media Server](https://github.com/TechHutTV/homelab/tree/main/media) - Plex, Jellyfin, *arr stack, and more.
@@ -19,14 +22,17 @@ This readme is a companion to my official walkthrough guide!
 * [Proxy Management](https://github.com/TechHutTV/homelab/tree/main/proxy) - NGINX Proxy Manager, DDNS with Cloudflare, Local Domains, and more.
 
 ## Proxmox as a NAS
+
 My current setup involves a single server with x3 NVME drives and a bunch of hard drives in a ZFS configuration. These are combined into separate ZFS pools for the HDDs (vault) and the SSDs (flash). Vault is used as a large data storage pool and Flash is used for containers and virtual machine disks. No matter your configuration you can follow this guide. However, I would recommend at least one NVME SSD for your boot drive, and at least 512gb if you don't have any other NVME SSDs and at least x2 HDDs for file storage.
 
 ### Post Install Steps (optional)
 
 #### Removing Proxmox Subscription Notice
+
 (not currently working)
 
 #### Disable Enterprise Repositories
+
 1. Navigate to _Node > Repositories_ Disable the enterprise repositories.
 2. Now click Add and enable the no subscription repository. Finally, go _Updates > Refresh_.
 3. Upgrade your system by clicking _Upgrade_ above the repository setting page.
@@ -39,22 +45,29 @@ My current setup involves a single server with x3 NVME drives and a bunch of har
 > This assumes a fresh installation without advanced storage settings during the installation. See this [issue](https://github.com/TechHutTV/homelab/issues/19).
 
 My boot drive is small and I run all my containers and virtual machine disks on a separate storage pool. So the LVM partition is not necessary for me and goes unused. If you're running everything off the same boot drive for fast storage skips this. Also you should check out this [video](https://www.youtube.com/watch?v=czQuRgoBrmM) to learn more about LVM before doing anything.
+
 1. Delete local-lvm manually from web interface under _Datacenter > Storage_.
 2. Run the following commands within _Node > Shell_.
+
    ```bash
    lvremove /dev/pve/data
    lvresize -l +100%FREE /dev/pve/root
    resize2fs /dev/mapper/pve-root
    ```
+
 3. Check to ensure your local storage partition is using all available space. Reassign storage for containers and VM if needed.
 
 #### Ensure IOMMU is enabled
+
 Enable IOMMU on in grub configuration within _Node > Shell_.
+
 ```bash
 nano /etc/default/grub
 ```
+
 You will see the line with `GRUB_CMDLINE_LINUX_DEFAULT="quiet"`, all you need to do is add `intel_iommu=on` or `amd_iommu=on` depending on your system.
-```
+
+```bash
 # Should look like this
 GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
 ```
@@ -62,15 +75,19 @@ GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
 ![](https://raw.githubusercontent.com/TechHutTV/homelab/refs/heads/main/storage/2_proxmox-iommu.jpeg)
 
 Next run the following commands and reboot your system.
+
 ```bash
 update-grub
 ```
+
 Now check to make sure everything is enabled.
+
 ```bash
 dmesg | grep -e DMAR -e IOMMU
 dmesg | grep 'remapping'
 ```
-Learn about enabling PCI Passthrough [here](https://pve.proxmox.com/wiki/PCI_Passthrough)
+
+Learn about enabling [PCI Passthrough](https://pve.proxmox.com/wiki/PCI_Passthrough)
 
 ### 2. Create ZFS Pools
 
@@ -82,7 +99,7 @@ First, checkout you disks and make sure that they're all there. Find this under 
 
 Now, on the Proxmox sidebar for your datacenter, go to _Disks > ZFS > Create: ZFS_. This will pop up the screen to create a ZFS pool.
 
-From this screen, it should show all of your drives, so select the ones you want in your pool, and select your RAID level (in my case RAIDZ for my vault pool and mirror for my flash pool) and compression, (in my case I keep it at on). Make sure you check the box that says __Add to Storage__. This will make the pools immediately available and will prevent using .raw files as opposed to my previous setup when I added directories.
+From this screen, it should show all of your drives, so select the ones you want in your pool, and select your RAID level (in my case RAIDZ for my vault pool and mirror for my flash pool) and compression, (in my case I keep it at on). Make sure you check the box that says **Add to Storage**. This will make the pools immediately available and will prevent using .raw files as opposed to my previous setup when I added directories.
 
 ![](https://raw.githubusercontent.com/TechHutTV/homelab/refs/heads/main/storage/4_proxmox-mirror-nvme.jpeg)
 
@@ -103,10 +120,13 @@ Now that our container is created I want to add some storage and mount the data 
 In our new LXC we first need to run some general updates and user creation.
 
 1. Update your system
+
    ```bash
    apt update && apt upgrade -y
    ```
+
 2. Create your user
+
    ```bash
    adduser brandon
    adduser brandon sudo
@@ -114,29 +134,40 @@ In our new LXC we first need to run some general updates and user creation.
 
    Great [video resource by KeepItTechie](https://www.youtube.com/watch?v=2gW4rWhurUs), [source](https://gist.github.com/pjobson/3811b73740a3a09597511c18be845a6c)
 3. Switch to your new user
+
    ```bash
    su - brandon
    ```
+
 4. Set permissions of mount points created earlier.
+
    ```bash
    sudo chown -R brandon:brandon /data
    sudo chown -R brandon:brandon /docker
    ```
+
 5. Install Samba
+
    ```bash
    sudo apt install samba
    ```
+
 6. Create a backup of the default configuration
+
    ```bash
    cd /etc/samba
    sudo mv smb.conf smb.conf.old
    ```
+
 7. Edit the samba config
+
    ```bash
    sudo nano smb.conf
    ```
-   This is my configuration (see [issue 51](https://github.com/TechHutTV/homelab/issues/51) for more info on subnets.) 
-   ```
+
+   This is my configuration (see [issue 51](https://github.com/TechHutTV/homelab/issues/51) for more info on subnets.)
+
+   ```bash
    [global]
       server string = Servarr
       workgroup = WORKGROUP
@@ -170,23 +201,31 @@ In our new LXC we first need to run some general updates and user creation.
       read only = no
       guest ok = no
    ```
+
 8. Add your samba user
+
    ```bash
    sudo smbpasswd -a [username]
    ```
+
 9. Set services to auto start on reboot
+
    ```bash
    sudo systemctl enable smbd
    sudo systemctl enable nmbd
    sudo systemctl restart smbd
    sudo systemctl restart nmbd
    ```
+
 10. Install wsdd for Windows discovery
+
     ```bash
     sudo apt install wsdd
     sudo apt install wsdd-server
     ```
+
 11. Allow services on firewall if you run into any issues.
+
     ```bash
     sudo ufw allow OpenSSH
     sudo ufw allow Samba
@@ -197,10 +236,13 @@ In our new LXC we first need to run some general updates and user creation.
     # Check ufw status
     sudo ufw status
     ```
+
     Optionally, enable the firewall.
+
     ```bash
     sudo ufw enable
     ```
 
-# Backups
+## Backups
+
 Work in Progress

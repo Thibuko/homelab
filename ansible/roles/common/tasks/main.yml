@@ -1,7 +1,7 @@
 ---
 - name: Update apt cache
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 3600
 
 - name: Install common packages
@@ -15,11 +15,11 @@
 
 - name: Upgrade all packages
   ansible.builtin.apt:
-    upgrade: yes
+    upgrade: true
 
 - name: Autoremove unnecessary packages
   ansible.builtin.apt:
-    autoremove: yes
+    autoremove: true
 
 - name: Set timezone to Europe/Brussels
   community.general.timezone:
