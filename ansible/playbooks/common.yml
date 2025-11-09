@@ -1,10 +1,12 @@
 ---
-- hosts: vms
-  become: yes
+- name: Apply common configuration to all vms
+  hosts: vms
+  become: true
   roles:
     - common
 
-- hosts: lxc
-  become: yes
+- name: Apply common configuration to all lxc containers
+  hosts: lxc
+  become: true
   roles:
     - common
