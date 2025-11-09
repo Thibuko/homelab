@@ -38,6 +38,13 @@ Also got one LXC container to manage the hard drive and share them in samba
 
 I use ansible to manage all those VM configuration. Everything related to ansible is located in ansible folder
 
+Always run ansible-lint to check for erros and fix them
+
+### Some basics rules
+
+* always name the tasks and plays
+* use boolean and not yes / no
+
 ## Git
 
 Use conventionnal commit to generate commit message
