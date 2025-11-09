@@ -1,0 +1,25 @@
+---
+- name: Update apt cache
+  tags: update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install common packages
+  ansible.builtin.apt:
+    name:
+      - vim
+      - git
+      - curl
+      - wget
+    state: present
+
+- name: Upgrade all packages
+  tags: update
+  ansible.builtin.apt:
+    upgrade: true
+
+- name: Autoremove unnecessary packages
+  tags: update
+  ansible.builtin.apt:
+    autoremove: true

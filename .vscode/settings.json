@@ -1,5 +1,5 @@
 {
-    "ansible.python.interpreterPath": "c:\\Python313\\python.exe",
+    "ansible.python.interpreterPath": "/bin/python",
     "conventionalCommitBuilder.scopes": [
         "robots",
         "ansible"
