@@ -1,0 +1,19 @@
+---
+- name: Create dashboard directory
+  ansible.builtin.file:
+    path: /docker/dashboard
+    state: directory
+    mode: '0755'
+
+- name: Template docker compose file
+  ansible.builtin.template:
+    src: compose.yml.j2
+    dest: /docker/dashboard/compose.yml
+    mode: '0644'
+
+- name: Manage dashboard stack
+  community.docker.docker_compose_v2:
+    project_src: /docker/dashboard
+    state: "{{ 'absent' if service_state == 'absent' else 'present' }}"
+    restarted: "{{ service_state == 'restarted' }}"
+    pulled: "{{ service_state == 'pulled' }}"

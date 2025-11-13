@@ -1,0 +1,52 @@
+---
+- name: Start Docker services
+  hosts: vms
+  become: true
+  vars:
+    service_state: present
+  tags: start
+  roles:
+    - { role: immich, when: inventory_hostname == 'immich' }
+    - { role: pihole, when: inventory_hostname == 'network' }
+    - { role: arrstack, when: inventory_hostname == 'servarr' }
+    - { role: dashboard, when: inventory_hostname == 'network' }
+    - { role: npm, when: inventory_hostname == 'proxy' }
+
+- name: Stop Docker services
+  hosts: vms
+  become: true
+  vars:
+    service_state: absent
+  tags: stop
+  roles:
+    - { role: immich, when: inventory_hostname == 'immich' }
+    - { role: pihole, when: inventory_hostname == 'network' }
+    - { role: arrstack, when: inventory_hostname == 'servarr' }
+    - { role: dashboard, when: inventory_hostname == 'network' }
+    - { role: npm, when: inventory_hostname == 'proxy' }
+
+- name: Restart Docker services
+  hosts: vms
+  become: true
+  vars:
+    service_state: restarted
+  tags: restart
+  roles:
+    - { role: immich, when: inventory_hostname == 'immich' }
+    - { role: pihole, when: inventory_hostname == 'network' }
+    - { role: arrstack, when: inventory_hostname == 'servarr' }
+    - { role: dashboard, when: inventory_hostname == 'network' }
+    - { role: npm, when: inventory_hostname == 'proxy' }
+
+- name: Update Docker services
+  hosts: vms
+  become: true
+  vars:
+    service_state: pulled
+  tags: update
+  roles:
+    - { role: immich, when: inventory_hostname == 'immich' }
+    - { role: pihole, when: inventory_hostname == 'network' }
+    - { role: arrstack, when: inventory_hostname == 'servarr' }
+    - { role: dashboard, when: inventory_hostname == 'network' }
+    - { role: npm, when: inventory_hostname == 'proxy' }

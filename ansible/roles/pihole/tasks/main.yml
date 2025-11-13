@@ -1,0 +1,19 @@
+---
+- name: Create pihole directory
+  ansible.builtin.file:
+    path: /docker/pihole
+    state: directory
+    mode: '0755'
+
+- name: Template docker compose file
+  ansible.builtin.template:
+    src: compose.yml.j2
+    dest: /docker/pihole/compose.yml
+    mode: '0644'
+
+- name: Manage pihole stack
+  community.docker.docker_compose_v2:
+    project_src: /docker/pihole
+    state: "{{ 'absent' if service_state == 'absent' else 'present' }}"
+    restarted: "{{ service_state == 'restarted' }}"
+    pulled: "{{ service_state == 'pulled' }}"
