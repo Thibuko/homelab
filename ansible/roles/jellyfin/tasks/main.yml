@@ -1,38 +1,38 @@
 ---
-- name: Create npm directory
+- name: Create jellyfin directory
   ansible.builtin.file:
-    path: /docker/npm
+    path: /docker/jellyfin
     state: directory
     mode: '0755'
 
 - name: Template docker compose file
   ansible.builtin.template:
     src: compose.yml.j2
-    dest: /docker/npm/compose.yml
+    dest: /docker/jellyfin/compose.yml
     mode: '0644'
 
-- name: Start npm stack
+- name: Start jellyfin stack
   tags: start
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/jellyfin
     state: present
     pull: always
 
-- name: Stop npm stack
+- name: Stop jellyfin stack
   tags: stop
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/jellyfin
     state: absent
 
-- name: Update npm stack
+- name: Update jellyfin stack
   tags: update
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/jellyfin
     state: present
     pull: always
 
-- name: Restart npm stack
+- name: Restart jellyfin stack
   tags: restart
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/jellyfin
     state: restarted

@@ -1,38 +1,38 @@
 ---
-- name: Create npm directory
+- name: Create pihole directory
   ansible.builtin.file:
-    path: /docker/npm
+    path: /docker/pihole
     state: directory
     mode: '0755'
 
 - name: Template docker compose file
   ansible.builtin.template:
     src: compose.yml.j2
-    dest: /docker/npm/compose.yml
+    dest: /docker/pihole/compose.yml
     mode: '0644'
 
-- name: Start npm stack
+- name: Start pihole stack
   tags: start
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/pihole
     state: present
     pull: always
 
-- name: Stop npm stack
+- name: Stop pihole stack
   tags: stop
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/pihole
     state: absent
 
-- name: Update npm stack
+- name: Update pihole stack
   tags: update
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/pihole
     state: present
     pull: always
 
-- name: Restart npm stack
+- name: Restart pihole stack
   tags: restart
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/pihole
     state: restarted

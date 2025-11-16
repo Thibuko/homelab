@@ -1,38 +1,38 @@
 ---
-- name: Create npm directory
+- name: Create hello_world directory
   ansible.builtin.file:
-    path: /docker/npm
+    path: /docker/hello_world
     state: directory
     mode: '0755'
 
 - name: Template docker compose file
   ansible.builtin.template:
     src: compose.yml.j2
-    dest: /docker/npm/compose.yml
+    dest: /docker/hello_world/compose.yml
     mode: '0644'
 
-- name: Start npm stack
+- name: Start hello_world stack
   tags: start
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/hello_world
     state: present
     pull: always
 
-- name: Stop npm stack
+- name: Stop hello_world stack
   tags: stop
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/hello_world
     state: absent
 
-- name: Update npm stack
+- name: Update hello_world stack
   tags: update
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/hello_world
     state: present
     pull: always
 
-- name: Restart npm stack
+- name: Restart hello_world stack
   tags: restart
   community.docker.docker_compose_v2:
-    project_src: /docker/npm
+    project_src: /docker/hello_world
     state: restarted

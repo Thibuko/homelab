@@ -11,9 +11,28 @@
     dest: /docker/immich/compose.yml
     mode: '0644'
 
-- name: Manage immich stack
+- name: Start immich stack
+  tags: start
   community.docker.docker_compose_v2:
     project_src: /docker/immich
-    state: "{{ 'absent' if service_state == 'absent' else 'present' }}"
-    restarted: "{{ service_state == 'restarted' }}"
-    pulled: "{{ service_state == 'pulled' }}"
+    state: present
+    pull: always
+
+- name: Stop immich stack
+  tags: stop
+  community.docker.docker_compose_v2:
+    project_src: /docker/immich
+    state: absent
+
+- name: Update immich stack
+  tags: update
+  community.docker.docker_compose_v2:
+    project_src: /docker/immich
+    state: present
+    pull: always
+
+- name: Restart immich stack
+  tags: restart
+  community.docker.docker_compose_v2:
+    project_src: /docker/immich
+    state: restarted

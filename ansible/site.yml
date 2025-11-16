@@ -1,0 +1,29 @@
+---
+
+- hosts: all
+  become: true
+  roles:
+    - common
+
+- hosts: vms
+  become: true
+  roles:
+    - hello_world
+
+- hosts: immich
+  become: true
+  roles:
+    - immich
+
+- hosts: network
+  become: true
+  roles:
+    - pi_hole
+    - npm
+    - dashboard
+
+- hosts: servarr
+  become: true
+  roles:
+    - arrstack
+    - jellyfin

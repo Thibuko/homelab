@@ -11,9 +11,28 @@
     dest: /docker/arrstack/compose.yml
     mode: '0644'
 
-- name: Manage arrstack stack
+- name: Start arrstack stack
+  tags: start
   community.docker.docker_compose_v2:
     project_src: /docker/arrstack
-    state: "{{ 'absent' if service_state == 'absent' else 'present' }}"
-    restarted: "{{ service_state == 'restarted' }}"
-    pulled: "{{ service_state == 'pulled' }}"
+    state: present
+    pull: always
+
+- name: Stop arrstack stack
+  tags: stop
+  community.docker.docker_compose_v2:
+    project_src: /docker/arrstack
+    state: absent
+
+- name: Update arrstack stack
+  tags: update
+  community.docker.docker_compose_v2:
+    project_src: /docker/arrstack
+    state: present
+    pull: always
+
+- name: Restart arrstack stack
+  tags: restart
+  community.docker.docker_compose_v2:
+    project_src: /docker/arrstack
+    state: restarted

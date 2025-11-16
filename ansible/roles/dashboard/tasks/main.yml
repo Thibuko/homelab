@@ -11,9 +11,28 @@
     dest: /docker/dashboard/compose.yml
     mode: '0644'
 
-- name: Manage dashboard stack
+- name: Start dashboard stack
+  tags: start
   community.docker.docker_compose_v2:
     project_src: /docker/dashboard
-    state: "{{ 'absent' if service_state == 'absent' else 'present' }}"
-    restarted: "{{ service_state == 'restarted' }}"
-    pulled: "{{ service_state == 'pulled' }}"
+    state: present
+    pull: always
+
+- name: Stop dashboard stack
+  tags: stop
+  community.docker.docker_compose_v2:
+    project_src: /docker/dashboard
+    state: absent
+
+- name: Update dashboard stack
+  tags: update
+  community.docker.docker_compose_v2:
+    project_src: /docker/dashboard
+    state: present
+    pull: always
+
+- name: Restart dashboard stack
+  tags: restart
+  community.docker.docker_compose_v2:
+    project_src: /docker/dashboard
+    state: restarted
