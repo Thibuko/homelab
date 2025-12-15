@@ -5,11 +5,6 @@
   roles:
     - common
 
-- hosts: vms
-  become: true
-  roles:
-    - hello_world
-
 - hosts: immich
   become: true
   roles:
@@ -18,12 +13,13 @@
 - hosts: network
   become: true
   roles:
-    - pi_hole
-    - npm
-    - dashboard
+#     - pi_hole
+#     - npm
+    - homarr
+    - convertx
 
 - hosts: servarr
   become: true
   roles:
-    - arrstack
+    - servarr
     - jellyfin

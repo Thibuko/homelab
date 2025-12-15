@@ -1,38 +1,38 @@
 ---
-- name: Create hello_world directory
+- name: Create servarr directory
   ansible.builtin.file:
-    path: /docker/hello_world
+    path: /docker/servarr
     state: directory
     mode: '0755'
 
 - name: Template docker compose file
   ansible.builtin.template:
     src: compose.yml.j2
-    dest: /docker/hello_world/compose.yml
+    dest: /docker/servarr/compose.yml
     mode: '0644'
 
-- name: Start hello_world stack
+- name: Start servarr stack
   tags: start
   community.docker.docker_compose_v2:
-    project_src: /docker/hello_world
+    project_src: /docker/servarr
     state: present
     pull: always
 
-- name: Stop hello_world stack
+- name: Stop servarr stack
   tags: stop
   community.docker.docker_compose_v2:
-    project_src: /docker/hello_world
+    project_src: /docker/servarr
     state: absent
 
-- name: Update hello_world stack
+- name: Update servarr stack
   tags: update
   community.docker.docker_compose_v2:
-    project_src: /docker/hello_world
+    project_src: /docker/servarr
     state: present
     pull: always
 
-- name: Restart hello_world stack
+- name: Restart servarr stack
   tags: restart
   community.docker.docker_compose_v2:
-    project_src: /docker/hello_world
+    project_src: /docker/servarr
     state: restarted

@@ -1,38 +1,38 @@
 ---
-- name: Create dashboard directory
+- name: Create convertx directory
   ansible.builtin.file:
-    path: /docker/dashboard
+    path: /docker/convertx
     state: directory
     mode: '0755'
 
 - name: Template docker compose file
   ansible.builtin.template:
     src: compose.yml.j2
-    dest: /docker/dashboard/compose.yml
+    dest: /docker/convertx/compose.yml
     mode: '0644'
 
-- name: Start dashboard stack
+- name: Start convertx stack
   tags: start
   community.docker.docker_compose_v2:
-    project_src: /docker/dashboard
+    project_src: /docker/convertx
     state: present
     pull: always
 
-- name: Stop dashboard stack
+- name: Stop convertx stack
   tags: stop
   community.docker.docker_compose_v2:
-    project_src: /docker/dashboard
+    project_src: /docker/convertx
     state: absent
 
-- name: Update dashboard stack
+- name: Update convertx stack
   tags: update
   community.docker.docker_compose_v2:
-    project_src: /docker/dashboard
+    project_src: /docker/convertx
     state: present
     pull: always
 
-- name: Restart dashboard stack
+- name: Restart convertx stack
   tags: restart
   community.docker.docker_compose_v2:
-    project_src: /docker/dashboard
+    project_src: /docker/convertx
     state: restarted

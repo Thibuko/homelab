@@ -1,38 +1,38 @@
 ---
-- name: Create arrstack directory
+- name: Create homarr directory
   ansible.builtin.file:
-    path: /docker/arrstack
+    path: /docker/homarr
     state: directory
     mode: '0755'
 
 - name: Template docker compose file
   ansible.builtin.template:
     src: compose.yml.j2
-    dest: /docker/arrstack/compose.yml
+    dest: /docker/homarr/compose.yml
     mode: '0644'
 
-- name: Start arrstack stack
+- name: Start homarr stack
   tags: start
   community.docker.docker_compose_v2:
-    project_src: /docker/arrstack
+    project_src: /docker/homarr
     state: present
     pull: always
 
-- name: Stop arrstack stack
+- name: Stop homarr stack
   tags: stop
   community.docker.docker_compose_v2:
-    project_src: /docker/arrstack
+    project_src: /docker/homarr
     state: absent
 
-- name: Update arrstack stack
+- name: Update homarr stack
   tags: update
   community.docker.docker_compose_v2:
-    project_src: /docker/arrstack
+    project_src: /docker/homarr
     state: present
     pull: always
 
-- name: Restart arrstack stack
+- name: Restart homarr stack
   tags: restart
   community.docker.docker_compose_v2:
-    project_src: /docker/arrstack
+    project_src: /docker/homarr
     state: restarted
